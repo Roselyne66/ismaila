@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Certificat & Rapport — CashVolt</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+
+    :root {
+        --jaune:#FFF848; --noir:#141414; --encre:#1F2124;
+        --accent-bg:#FFFDEB; --accent-bord:#F2E9A0;
+        --gris:#6C7176; --trait:#E7E9EC; --fond:#EEF0F2; --carte:#FBFBFC;
+    }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:'Poppins',sans-serif; background:var(--fond); color:var(--encre); padding:22px 14px; }
+    .cert { max-width:920px; margin:0 auto; background:#fff; border:2px solid var(--noir); border-radius:8px; padding:28px; }
+
+    .head { display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:24px; padding-bottom:20px; border-bottom:3px solid var(--jaune); }
+    .badge { width:118px; height:118px; background:var(--jaune); border-radius:16px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    .badge .l { font-size:9px; letter-spacing:2px; font-weight:700; }
+    .badge .g { font-size:46px; font-weight:800; line-height:1; }
+    .badge .s { font-size:11px; letter-spacing:1px; }
+    .badge .e { font-size:8px; font-weight:700; letter-spacing:1px; margin-top:2px; } /* dynamique selon le grade */
+    .head .center { text-align:center; }
+    .head .center img { height:70px; border-radius:12px; margin-bottom:8px; }
+    .head h1 { font-size:36px; font-weight:800; letter-spacing:-1px; }
+    .head .slo { font-size:12px; letter-spacing:2px; color:var(--gris); font-weight:600; }
+    .legend { font-size:10px; border:1px solid var(--trait); border-radius:8px; padding:8px 10px; }
+    .legend div { display:flex; align-items:center; gap:7px; padding:1px 0; }
+    .legend .k { background:var(--noir); color:var(--jaune); font-weight:700; font-size:9px; min-width:26px; text-align:center; border-radius:3px; }
+
+    /* ---- Nouvelle rangée V3 : 2 blocs au lieu de 3 ---- */
+    .row2 { display:grid; grid-template-columns:1fr 1.4fr; gap:16px; margin-top:22px; }
+
+    .card { border:1px solid var(--trait); border-radius:10px; padding:16px 18px; }
+    .card .ct { font-size:12px; letter-spacing:.3px; text-transform:uppercase; color:var(--encre); font-weight:800; margin-bottom:12px; }
+
+    /* Bloc "Grâce à votre achat" */
+    .benef { background:var(--accent-bg); border-color:var(--accent-bord); }
+    .benef .item { margin-bottom:14px; }
+    .benef .item:last-child { margin-bottom:0; }
+    .benef .num { font-size:26px; font-weight:800; color:var(--noir); }
+    .benef .lab { font-size:11px; font-weight:700; color:var(--encre); }
+    .benef .src { font-size:9px; color:var(--gris); margin-top:2px; }
+    .benef .num.pending { color:#C9CCCF; font-weight:700; }
+    .benef .src.pending-note { color:#B08900; font-style:italic; }
+
+    /* Bloc fusionné Produit + Résumé de santé */
+    .fusion { display:grid; grid-template-columns:auto 1fr; gap:20px; align-items:center; padding-top:4px; }
+    .fusion > div:nth-child(2) { border-left:1px solid var(--trait); padding-left:20px; }
+    .gauge { width:110px; height:110px; border-radius:50%; background:conic-gradient(var(--noir) 0% 94%, var(--trait) 94% 100%); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .gauge .in { width:82px; height:82px; background:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:800; }
+    .sante-wrap { text-align:center; }
+    .sante-sub { font-size:10px; color:var(--gris); margin-top:6px; }
+    .confirm { font-size:9.5px; color:var(--noir); font-weight:600; margin-top:4px; background:var(--jaune); display:inline-block; padding:2px 8px; border-radius:6px; }
+
+    .prow { display:flex; justify-content:space-between; font-size:13px; padding:5px 0; border-bottom:1px solid var(--trait); }
+    .prow:last-child { border-bottom:none; }
+    .prow .k { color:var(--gris); }
+    .prow .v { font-weight:600; }
+
+    .conclusion { grid-column:1 / -1; margin-top:14px; padding-top:14px; border-top:1px dashed var(--trait); text-align:center; }
+    .conclusion .big { font-size:22px; font-weight:800; }
+    .conclusion .sub { font-size:10.5px; color:var(--gris); margin-top:2px; }
+
+    .stats { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-top:16px; }
+    .stat { border:1px solid var(--trait); border-radius:10px; padding:12px; text-align:center; }
+    .stat .l { font-size:9px; letter-spacing:1px; text-transform:uppercase; color:var(--gris); font-weight:600; }
+    .stat .v { font-size:18px; font-weight:800; margin:4px 0 2px; }
+    .stat .q { font-size:10px; color:var(--noir); font-weight:700; }
+
+    .why { border:1px solid var(--jaune); border-radius:12px; padding:20px; margin-top:20px; }
+    .why h2 { text-align:center; font-size:16px; font-weight:800; }
+    .why .sub { text-align:center; font-size:11px; color:var(--gris); margin-bottom:16px; }
+    .why .icons { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; }
+    .why .it { text-align:center; }
+    .why .it .ic { width:44px; height:44px; margin:0 auto 8px; background:var(--jaune); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:20px; }
+    .why .it .t { font-weight:700; font-size:12px; }
+    .why .it .d { font-size:10px; color:var(--gris); margin-top:4px; line-height:1.35; }
+
+    .comp { display:grid; grid-template-columns:1fr auto 1fr; gap:16px; align-items:stretch; margin-top:20px; }
+    .comp .box { border-radius:10px; padding:16px; }
+    .comp .no { background:#3A3D40; color:#fff; }
+    .comp .yes { background:var(--jaune); }
+    .comp .box h3 { font-size:12px; text-align:center; font-weight:800; margin-bottom:12px; letter-spacing:.5px; }
+    .comp .li { font-size:12px; padding:4px 0; display:flex; gap:8px; }
+    .comp .price { text-align:center; margin-top:12px; padding-top:10px; border-top:1px solid rgba(255,255,255,.25); }
+    .comp .yes .price { border-top-color:rgba(0,0,0,.15); }
+    .comp .price .pl { font-size:9px; letter-spacing:1px; opacity:.8; }
+    .comp .price .pv { font-size:24px; font-weight:800; }
+    .comp .vs { display:flex; align-items:center; font-weight:800; color:var(--gris); }
+
+    .ctrl { margin-top:20px; border:1px solid var(--trait); border-radius:10px; padding:16px 18px; }
+    .ctrl h3 { font-size:13px; letter-spacing:.5px; font-weight:700; margin-bottom:12px; }
+    .ctrl .grid { display:grid; grid-template-columns:repeat(2,1fr); gap:6px 20px; }
+    .ctrl .li { font-size:12.5px; display:flex; gap:8px; align-items:flex-start; }
+    .ctrl .li .c { color:var(--noir); font-weight:700; flex-shrink:0; }
+
+    .valid { margin-top:20px; background:var(--noir); color:#fff; border-radius:12px; padding:18px 24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; }
+    .valid .ring { width:44px; height:44px; border:2px solid var(--jaune); border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--jaune); font-size:20px; }
+    .valid .lab { font-size:9px; letter-spacing:1.5px; color:#9A9EA3; text-transform:uppercase; }
+    .valid .v2 { font-size:16px; font-weight:800; color:var(--jaune); }
+    .valid .meta { text-align:right; font-size:11px; color:#B8BCC0; line-height:1.6; }
+    .valid .meta b { color:#fff; }
+
+    .cta { text-align:center; margin-top:18px; }
+    .cta a { display:inline-flex; align-items:center; gap:9px; background:var(--jaune); color:var(--noir); text-decoration:none; font-weight:700; font-size:14px; padding:13px 28px; border:2px solid var(--noir); border-radius:10px; }
+
+    .foot { text-align:center; font-size:10px; letter-spacing:1.5px; color:var(--gris); text-transform:uppercase; margin-top:16px; padding-top:14px; border-top:1px solid var(--noir); }
+
+    @media(max-width:720px){ .row2,.fusion,.stats,.why .icons,.comp,.ctrl .grid{grid-template-columns:1fr;} .head{grid-template-columns:1fr;text-align:center;} }
+
+
+/* ---- Styles du rapport détaillé (classes préfixées rap-) ---- */
+
+    :root { --jaune:#FFF848; --noir:#141414; --gris-bg:#F6F7F9; --gris-bord:#E4E6EA; --gris-txt:#6A6F76; }
+    * { box-sizing:border-box; }
+    body { font-family:'Poppins',sans-serif; background:var(--gris-bg); color:var(--noir); margin:0; padding:24px 14px; line-height:1.5; }
+    .rap-doc { max-width:780px; margin:0 auto; background:#fff; border-radius:18px; overflow:hidden; box-shadow:0 12px 40px rgba(0,0,0,0.08); }
+
+    /* En-tête : noir en haut, logo en jaune (corrigé - plus de jaune sur jaune) */
+    .rap-head { background:var(--noir); padding:26px 30px; display:flex; align-items:center; gap:18px; }
+    .rap-head img { width:66px; height:66px; border-radius:12px; object-fit:contain; background:var(--jaune); padding:4px; }
+    .rap-head .rap-t1 { font-size:22px; font-weight:800; letter-spacing:.5px; color:#fff; }
+    .rap-head .rap-t2 { font-size:12px; font-weight:600; color:var(--jaune); margin-top:2px; }
+
+    .rap-verdict-bar { display:flex; justify-content:space-between; align-items:center; padding:18px 30px; background:#232323; color:#fff; flex-wrap:wrap; gap:12px; }
+    .rap-verdict-bar .rap-lab { font-size:11px; text-transform:uppercase; letter-spacing:1px; color:#bdbdbd; }
+    .rap-verdict-bar .rap-val { font-size:20px; font-weight:800; }
+    .rap-verdict-bar .rap-grade { background:var(--jaune); color:var(--noir); font-size:26px; font-weight:800; padding:6px 18px; border-radius:10px; }
+
+    .rap-section { padding:22px 30px 6px; }
+    .rap-section h2 { font-size:13px; text-transform:uppercase; letter-spacing:1px; color:var(--noir); margin:0 0 12px; padding-left:12px; border-left:4px solid var(--jaune); }
+    .rap-grid { display:grid; grid-template-columns:1fr 1fr; gap:0 30px; }
+    .rap-row { display:flex; justify-content:space-between; padding:9px 0; border-bottom:1px solid var(--gris-bord); font-size:14px; gap:12px; }
+    .rap-row .rap-k { color:var(--gris-txt); }
+    .rap-row .rap-v { font-weight:600; text-align:right; word-break:break-word; }
+
+    .rap-footer { text-align:center; font-size:11px; color:var(--gris-txt); padding:22px 30px 28px; border-top:2px solid var(--noir); margin-top:14px; letter-spacing:1px; }
+    @media (max-width:560px) { .rap-grid{grid-template-columns:1fr;} .rap-head{flex-direction:column;text-align:center;} }
+
+
+/* ---- Bascule certificat / rapport ---- */
+#vue-rapport { display:none; margin-top:24px; }
+.retour-lien { display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:700;
+  color:var(--noir); text-decoration:none; margin:0 0 14px 0; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<div id="vue-certificat">
+
+  <div class="cert">
+
+    <div class="head">
+        <div class="badge">
+            <div class="l">GRADE</div>
+            <div class="g" id="val-grade">A++</div>
+            <div class="s">★★★★★</div>
+            <div class="e" id="val-etat">ÉTAT EXCELLENT</div>
+        </div>
+        <div class="center">
+            <img src="cashvolt_logo.jpg" alt="CashVolt">
+            <h1>BATTERIE CERTIFIÉE</h1>
+            <div class="slo">SOYONS CASH SUR L'ÉTAT DE VOTRE BATTERIE</div>
+        </div>
+        <div class="legend">
+            <div><span class="k">A++</span> Origine, état excellent</div>
+            <div><span class="k">A+</span> Origine, bon état</div>
+            <div><span class="k">A</span> Compatible / neuve</div>
+            <div><span class="k">B</span> Sous seuil (non vendue)</div>
+            <div><span class="k">C</span> À remplacer (non vendue)</div>
+        </div>
+    </div>
+
+    <!-- ==== V3 : "Grâce à votre achat" + bloc fusionné Produit / Résumé de santé ==== -->
+    <div class="row2">
+
+        <div class="card benef">
+            <div class="ct">Grâce à votre achat</div>
+            <div class="item">
+                <div class="num" id="val-eco-euro">60 €</div>
+                <div class="lab">économisés par an en moyenne</div>
+                <div class="src">★ Source : livre blanc batterie, filière [à référencer]</div>
+            </div>
+            <div class="item">
+                <div class="num" id="val-eco-co2">85%</div>
+                <div class="lab">de CO₂ évité vs un smartphone neuf</div>
+                <div class="src">★ Source : ADEME</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="ct">Votre appareil &amp; sa batterie</div>
+            <div class="fusion">
+                <div class="sante-wrap">
+                    <div class="gauge"><div class="in" id="val-sante">94%</div></div>
+                    <div class="sante-sub">Capacité actuelle / d'origine</div>
+                    <div class="confirm">Confirmée par la méthode CashVolt</div>
+                </div>
+                <div>
+                    <div class="prow"><span class="k">Modèle</span><span class="v" id="val-model">X-Phone 15 Pro</span></div>
+                    <div class="prow"><span class="k">IMEI</span><span class="v" id="val-imei">3554 6898 1234 567</span></div>
+                    <div class="prow"><span class="k">Capacité</span><span class="v" id="val-capacity">3274 mAh</span></div>
+                    <div class="prow"><span class="k">Technologie</span><span class="v">Lithium-ion</span></div>
+                    <div class="prow"><span class="k">Voltage</span><span class="v" id="val-volt">3,88 V</span></div>
+                </div>
+                <div class="conclusion">
+                    <div class="big" id="val-duree">Entre 3 et 4 ans restants</div>
+                    <div class="sub">Basée sur votre utilisation habituelle : appels, messages, photos, réseaux sociaux</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="stats">
+        <div class="stat"><div class="l">Résistance interne</div><div class="v" id="val-res">18,7 mΩ</div><div class="q">Excellente</div></div>
+        <div class="stat"><div class="l">Cycles effectués</div><div class="v" id="val-cyc">312</div><div class="q">Faible</div></div>
+        <div class="stat"><div class="l">Température</div><div class="v" id="val-temp">28,6 °C</div><div class="q">Normale</div></div>
+        <div class="stat"><div class="l">Tension</div><div class="v">3,88 V</div><div class="q">Stable</div></div>
+        <div class="stat"><div class="l">Sécurité</div><div class="v">100%</div><div class="q">Aucun défaut</div></div>
+    </div>
+
+    <div class="why">
+        <h2>POURQUOI CE TÉLÉPHONE VAUT SON PRIX ?</h2>
+        <div class="sub">La certification CashVolt vous apporte transparence, sécurité et sérénité.</div>
+        <div class="icons">
+            <div class="it"><div class="ic">🔍</div><div class="t">Batterie mesurée</div><div class="d">Tests avec des instruments professionnels</div></div>
+            <div class="it"><div class="ic">🛡️</div><div class="t">Risque réduit</div><div class="d">Faible probabilité de panne prématurée</div></div>
+            <div class="it"><div class="ic">🔋</div><div class="t">Autonomie fiable</div><div class="d">Conforme à vos usages quotidiens</div></div>
+            <div class="it"><div class="ic">🏅</div><div class="t">Valeur préservée</div><div class="d">Meilleure valeur de revente</div></div>
+            <div class="it"><div class="ic">🙂</div><div class="t">Achat serein</div><div class="d">Vous savez ce que vous achetez</div></div>
+        </div>
+    </div>
+
+    <div class="comp">
+        <div class="box no">
+            <h3>TÉLÉPHONE NON CERTIFIÉ</h3>
+            <div class="li">— État de la batterie inconnu</div>
+            <div class="li">— Risque de perte d'autonomie</div>
+            <div class="li">— Remplacement coûteux possible</div>
+            <div class="li">— Valeur de revente incertaine</div>
+            <div class="price"><div class="pl">PRIX D'ACHAT MOYEN</div><div class="pv">290 €</div></div>
+        </div>
+        <div class="vs">VS</div>
+        <div class="box yes">
+            <h3>TÉLÉPHONE CERTIFIÉ CASHVOLT</h3>
+            <div class="li">✓ Batterie testée et vérifiée</div>
+            <div class="li">✓ Risque de panne fortement réduit</div>
+            <div class="li">✓ Durée de vie prolongée</div>
+            <div class="li">✓ Valeur de revente préservée</div>
+            <div class="price"><div class="pl">PRIX D'ACHAT MOYEN</div><div class="pv">340 € <span style="font-size:12px;">(+50 € de sérénité)</span></div></div>
+        </div>
+    </div>
+
+    <div class="ctrl">
+        <h3>Ce que nous avons vérifié sur cette batterie</h3>
+        <div class="grid">
+            <div class="li"><span class="c">✓</span> Qu'elle tient correctement la charge</div>
+            <div class="li"><span class="c">✓</span> Qu'elle n'est pas trop usée</div>
+            <div class="li"><span class="c">✓</span> Qu'elle se recharge normalement</div>
+            <div class="li"><span class="c">✓</span> Qu'elle ne se décharge pas anormalement</div>
+            <div class="li"><span class="c">✓</span> Qu'elle ne chauffe pas de façon excessive</div>
+            <div class="li"><span class="c">✓</span> Que son historique d'utilisation reste cohérent</div>
+            <div class="li"><span class="c">✓</span> Qu'elle ne présente ni choc, ni gonflement</div>
+            <div class="li"><span class="c">✓</span> Que ses connexions sont en bon état</div>
+            <div class="li"><span class="c">✓</span> Que ses systèmes de sécurité fonctionnent</div>
+            <div class="li"><span class="c">✓</span> Que son électronique de gestion est conforme</div>
+            <div class="li"><span class="c">✓</span> Qu'elle tienne dans le temps pour votre utilisation</div>
+        </div>
+    </div>
+
+    <div class="valid">
+        <div style="display:flex;align-items:center;gap:14px;">
+            <div class="ring">✓</div>
+            <div><div class="lab">Tests laboratoire</div><div class="v2">11 / 11 réussis</div></div>
+        </div>
+        <div class="meta">
+            Certificat N° <b id="val-cert">CV-2026-05-30-12345</b><br>
+            Établi le <b id="val-date">30/05/2026</b> · Valable jusqu'au <b id="val-datelim">30/05/2027</b>
+        </div>
+    </div>
+
+    <div class="cta">
+        <a href="#" id="lien-rapport" target="_blank">📄 Voir le rapport de test détaillé →</a>
+    </div>
+
+    <div class="foot">CashVolt certifie l'état réel de la batterie pour des achats plus sûrs, durables et responsables · cashvolt.fr</div>
+
+  </div>
+
+</div>
+
+<div id="vue-rapport">
+    <a class="retour-lien" onclick="afficherCertificat()">← Retour au certificat</a>
+    
+  <div class="rap-doc">
+
+    <div class="rap-head">
+        <img src="cashvolt_logo.jpg" alt="CashVolt">
+        <div>
+            <div class="rap-t1">RAPPORT DE TEST DÉTAILLÉ</div>
+            <div class="rap-t2">Soyons cash sur l'état de votre batterie</div>
+        </div>
+    </div>
+
+    <div class="rap-verdict-bar">
+        <div>
+            <div class="rap-lab">Grade CashVolt</div>
+            <div class="rap-val" id="d-decision">VENDABLE — le téléphone peut être vendu tel quel</div>
+        </div>
+        <div class="rap-grade" id="d-grade">A++</div>
+    </div>
+
+    <div class="rap-section">
+        <h2>Informations client</h2>
+        <div class="rap-grid">
+            <div class="rap-row"><span class="rap-k">Nom du client</span><span class="rap-v" id="d-client">—</span></div>
+            <div class="rap-row"><span class="rap-k">Localisation</span><span class="rap-v" id="d-lieu">France</span></div>
+        </div>
+    </div>
+
+    <div class="rap-section">
+        <h2>Informations opérateur</h2>
+        <div class="rap-grid">
+            <div class="rap-row"><span class="rap-k">Prestataire</span><span class="rap-v" id="d-presta">CashVolt Reconditionnement</span></div>
+            <div class="rap-row"><span class="rap-k">Technicien</span><span class="rap-v" id="d-tech">—</span></div>
+        </div>
+    </div>
+
+    <div class="rap-section">
+        <h2>Référence du dossier</h2>
+        <div class="rap-grid">
+            <div class="rap-row"><span class="rap-k">Modèle déclaré</span><span class="rap-v" id="d-modele-decl">—</span></div>
+            <div class="rap-row"><span class="rap-k">IMEI</span><span class="rap-v" id="d-imei">—</span></div>
+        </div>
+    </div>
+
+    <div class="rap-section">
+        <h2>Certification batterie</h2>
+        <div class="rap-grid">
+            <div class="rap-row"><span class="rap-k">Cycles de charge</span><span class="rap-v" id="d-cycles">—</span></div>
+            <div class="rap-row"><span class="rap-k">Capacité</span><span class="rap-v" id="d-capacite">— mAh</span></div>
+            <div class="rap-row"><span class="rap-k">Température</span><span class="rap-v" id="d-temp">— °C</span></div>
+            <div class="rap-row"><span class="rap-k">Tension</span><span class="rap-v" id="d-tension">— V</span></div>
+            <div class="rap-row"><span class="rap-k">Résistance mesurée</span><span class="rap-v" id="d-resist">— mΩ</span></div>
+        </div>
+    </div>
+
+    <div class="rap-section">
+        <h2>Diagnostic CashVolt</h2>
+        <div class="rap-grid">
+            <div class="rap-row"><span class="rap-k">Verdict</span><span class="rap-v" id="d-verdict">—</span></div>
+            <div class="rap-row"><span class="rap-k">Durée de vie estimée</span><span class="rap-v" id="d-duree">—</span></div>
+        </div>
+    </div>
+
+    <div class="rap-footer">
+        CONTRÔLE QUALITÉ &nbsp;•&nbsp; CERTIFICATION OFFICIELLE &nbsp;•&nbsp; CASHVOLT.FR
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+function afficherRapport() {
+    document.getElementById('vue-certificat').style.display = 'none';
+    document.getElementById('vue-rapport').style.display = 'block';
+    window.scrollTo(0,0);
+}
+function afficherCertificat() {
+    document.getElementById('vue-rapport').style.display = 'none';
+    document.getElementById('vue-certificat').style.display = 'block';
+    window.scrollTo(0,0);
+}
+// Le bouton "Voir le rapport" du certificat déclenche l'affichage du rapport (même page, mêmes données)
+document.getElementById('lien-rapport').addEventListener('click', function(e){
+    e.preventDefault();
+    afficherRapport();
+});
+</script>
+</body>
+</html>

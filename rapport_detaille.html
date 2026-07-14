@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rapport de test détaillé — CashVolt</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    :root { --jaune:#FFF848; --noir:#141414; --gris-bg:#F6F7F9; --gris-bord:#E4E6EA; --gris-txt:#6A6F76; }
+    * { box-sizing:border-box; }
+    body { font-family:'Poppins',sans-serif; background:var(--gris-bg); color:var(--noir); margin:0; padding:24px 14px; line-height:1.5; }
+    .doc { max-width:780px; margin:0 auto; background:#fff; border-radius:18px; overflow:hidden; box-shadow:0 12px 40px rgba(0,0,0,0.08); }
+
+    /* En-tête : noir en haut, logo en jaune (corrigé - plus de jaune sur jaune) */
+    .head { background:var(--noir); padding:26px 30px; display:flex; align-items:center; gap:18px; }
+    .head img { width:66px; height:66px; border-radius:12px; object-fit:contain; background:var(--jaune); padding:4px; }
+    .head .t1 { font-size:22px; font-weight:800; letter-spacing:.5px; color:#fff; }
+    .head .t2 { font-size:12px; font-weight:600; color:var(--jaune); margin-top:2px; }
+
+    .verdict-bar { display:flex; justify-content:space-between; align-items:center; padding:18px 30px; background:#232323; color:#fff; flex-wrap:wrap; gap:12px; }
+    .verdict-bar .lab { font-size:11px; text-transform:uppercase; letter-spacing:1px; color:#bdbdbd; }
+    .verdict-bar .val { font-size:20px; font-weight:800; }
+    .verdict-bar .grade { background:var(--jaune); color:var(--noir); font-size:26px; font-weight:800; padding:6px 18px; border-radius:10px; }
+
+    .section { padding:22px 30px 6px; }
+    .section h2 { font-size:13px; text-transform:uppercase; letter-spacing:1px; color:var(--noir); margin:0 0 12px; padding-left:12px; border-left:4px solid var(--jaune); }
+    .grid { display:grid; grid-template-columns:1fr 1fr; gap:0 30px; }
+    .row { display:flex; justify-content:space-between; padding:9px 0; border-bottom:1px solid var(--gris-bord); font-size:14px; gap:12px; }
+    .row .k { color:var(--gris-txt); }
+    .row .v { font-weight:600; text-align:right; word-break:break-word; }
+
+    .footer { text-align:center; font-size:11px; color:var(--gris-txt); padding:22px 30px 28px; border-top:2px solid var(--noir); margin-top:14px; letter-spacing:1px; }
+    @media (max-width:560px) { .grid{grid-template-columns:1fr;} .head{flex-direction:column;text-align:center;} }
+</style>
+</head>
+<body>
+  <div class="doc">
+
+    <div class="head">
+        <img src="cashvolt_logo.jpg" alt="CashVolt">
+        <div>
+            <div class="t1">RAPPORT DE TEST DÉTAILLÉ</div>
+            <div class="t2">Soyons cash sur l'état de votre batterie</div>
+        </div>
+    </div>
+
+    <div class="verdict-bar">
+        <div>
+            <div class="lab">Grade CashVolt</div>
+            <div class="val" id="d-decision">VENDABLE — le téléphone peut être vendu tel quel</div>
+        </div>
+        <div class="grade" id="d-grade">A++</div>
+    </div>
+
+    <div class="section">
+        <h2>Informations client</h2>
+        <div class="grid">
+            <div class="row"><span class="k">Nom du client</span><span class="v" id="d-client">—</span></div>
+            <div class="row"><span class="k">Localisation</span><span class="v" id="d-lieu">France</span></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Informations opérateur</h2>
+        <div class="grid">
+            <div class="row"><span class="k">Prestataire</span><span class="v" id="d-presta">CashVolt Reconditionnement</span></div>
+            <div class="row"><span class="k">Technicien</span><span class="v" id="d-tech">—</span></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Référence du dossier</h2>
+        <div class="grid">
+            <div class="row"><span class="k">Modèle déclaré</span><span class="v" id="d-modele-decl">—</span></div>
+            <div class="row"><span class="k">IMEI</span><span class="v" id="d-imei">—</span></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Certification batterie</h2>
+        <div class="grid">
+            <div class="row"><span class="k">Cycles de charge</span><span class="v" id="d-cycles">—</span></div>
+            <div class="row"><span class="k">Capacité</span><span class="v" id="d-capacite">— mAh</span></div>
+            <div class="row"><span class="k">Température</span><span class="v" id="d-temp">— °C</span></div>
+            <div class="row"><span class="k">Tension</span><span class="v" id="d-tension">— V</span></div>
+            <div class="row"><span class="k">Résistance mesurée</span><span class="v" id="d-resist">— mΩ</span></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Diagnostic CashVolt</h2>
+        <div class="grid">
+            <div class="row"><span class="k">Verdict</span><span class="v" id="d-verdict">—</span></div>
+            <div class="row"><span class="k">Durée de vie estimée</span><span class="v" id="d-duree">—</span></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        CONTRÔLE QUALITÉ &nbsp;•&nbsp; CERTIFICATION OFFICIELLE &nbsp;•&nbsp; CASHVOLT.FR
+    </div>
+
+  </div>
+</body>
+</html>
